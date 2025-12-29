@@ -1,51 +1,48 @@
-from sklearn.ensemble import RandomForestRegressor
 import streamlit as st
 import pickle
 from sklearn.preprocessing import StandardScaler
 import pandas as pd
 import time
 from sklearn.datasets import fetch_california_housing
-st.title('🏠House Price prediction using ML')
-
-st.image('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRvQdqIasHkDTf5733FK14z5mPQ18VPhg_R_Q&s')
+from sklearn.ensemble import RandomForestRegressor
+st.title('🏠 House Price prediction using ML')
+st.image('https://www.estationery.com/files/christmas/170/bottom.gif')
 
 df = pd.read_csv('house_data.csv')
 X = df.iloc[:,:-3]
 y = df.iloc[:,-1]
 
-final_X = X
-scaler = StandardScaler()
-scaled_X = scaler.fit_transform(final_X)
-
-st.sidebar.title('Select House features: ')
-st.sidebar.image('https://cdn.dribbble.com/userupload/20000742/file/original-aaf23458355a156d0cf85b8217a5065a.gif')
+st.sidebar.title('🏠 Select House features')
+st.sidebar.image('https://www.estationery.com/files/christmas/170/bottom.gif')
 all_value = []
-for i in final_X:
-  min_value= Final_x[i].min()
-  max_value= final_x[i].max()
-  result = st.sidebar.slider(f'Select {i} value',min_value,max_value)
-  all_value.append(result)
+for i in X:
+  min_value = int(X[i].min())
+  max_value = int(X[i].max())
+  ans = st.sidebar.slider(f'Select {i} value',min_value, max_value)
+  all_value.append(ans)
 
+# st.write(all_value)
 
-user_x = scaler.transform([all_value])
+scaler = StandardScaler()
+scaled_X = scaler.fit_transform(X)
+final_value = scaler.transform([all_value])
 
 @st.cache_data
-def ml_model(x,y):
-   model= RandomForestRegressor()
+def model_run(X,y):
+  model = RandomForestRegressor()
   model.fit(X,y)
- return model
+  return model
 
-model= ml_model(scale_X,y)
-house_price =model.predict(user_x)[0]
+model = model_run(X,y)  
+house_price = model.predict(final_value)[0]
 
-final_price = round(house_price *100000,2)
+with st.spinner('Predicting House price'):
+  time.sleep(1)
+msg = f'''House price is: $ {round(house_price*100000,2)}'''
+st.success(msg)
 
-with st.spinner('prediction house price'):
-  import time
-  time.sleep(2)
+st.markdown('''**Design and Developed by: Damini Yadav**''')
 
-st.success(f'estimated house price is;${(final_price}')
-st.markdown('''**design and developed by:Damini Yadav**''')
 
 
 
